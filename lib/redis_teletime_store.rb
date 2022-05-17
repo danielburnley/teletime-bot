@@ -3,7 +3,7 @@ require "json"
 
 class RedisTeletimeStore
   def initialize
-    @redis = Redis.new
+    @redis = Redis.new(url: ENV["REDIS_URL"])
   end
 
   def store(teletime)

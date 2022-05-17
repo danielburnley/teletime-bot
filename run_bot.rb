@@ -14,6 +14,15 @@ teletime_display = TeletimeDisplay.new
 
 bot = Discordrb::Bot.new(token: bot_token, intents: [:server_messages])
 
+bot.application_command(:teletime).subcommand(:reset) do |event|
+  puts event.options["confirmation"]
+  unless(event.options["confirmation"] == "True")
+    teletime.reset
+    overview = teletime.overview
+    event.respond(content: teletime_display.format_teletime_reset(overview))
+  end
+end
+
 bot.application_command(:teletime).subcommand(:show) do |event|
   overview = teletime.overview
   event.respond(content: teletime_display.format_teletime(overview))

@@ -17,6 +17,12 @@ class TeletimeDisplay
     res.join("\n")
   end
 
+  def format_teletime_reset(teletime)
+    update = "Telephone reset!"
+
+    "#{update}\n\n#{format_teletime(teletime)}"
+  end
+
   def format_branch_updated(branch, username, teletime)
     update = "#{username} added to branch #{branch.upcase}."
 
