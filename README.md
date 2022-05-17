@@ -1,27 +1,63 @@
-Display
-```Current Slots:
-A(xxxx): 2 days 4 hours 
-B(xxxx): 1 day 1 hour 
-C(xxxx): 2 days 7 hours 
-D(xxxx): 1 day 11 hours 
-E(xxxx): 1 day 1 hour 
+# Teletime Bot
 
-Branch Status:
-A: xxxx, xxxx, xxxx, xxxx (4)
-B: xxxx, xxxx (2)
-C: xxxx, xxxx, xxxx xxxx (3)
-D: xxxx, xxxx, xxxx, xxxx (4)
-E: xxxx, xxxx, xxxx (3)
+A bot for running telephone style art games :telephone: :paintbrush:
+
+## Notes
+
+This bot is currently only set up to run against a single server, if you want to run a copy of this bot you need to set it up yourself (See developer guide below)
+
+## User guide
+
+### Commands
+
+- `/teletime reset <true/false>`
+  - Resets the telephone, requires confirmation
+- `/teletime show`
+  - Shows the status of the current telephone
+- `/teletime add <branch> <user>`
+  - Adds a user to the end of the specified branch and sets the deadline to 72 hours
+- `/teletime set_hours <branch> <hours>`
+  - Sets the deadline to `<hours>` from now
+- `/teletime clear_list <branch>`
+  - Clears the branch names
+- `/teletime manual_list <branch> <names>`
+  - Manually sets the branch names to the names given
+- `/teletime done <branch>`
+  - Marks the branch as done
+- `/teletime on_hold <branch>`
+  - Marks the branch as on hold
+- `/teletime free <branch>`
+  - Marks the branch as free
+
+## Developer guide
+
+### Setting up your environment
+
+**Prerequisites**
+
+- Ruby version 3
+- Redis
+- (Optional) Docker with/without docker-compose
+
+**Environment variables**
+
+At the moment this bot is configured to run against a single server and uses environment variables to determine the server ID.
+
+Create the file `.env` in the root of this folder containing the following:
+
+```
+DISCORD_BOT_TOKEN=<DISCORD_BOT_TOKEN>
+DISCORD_SERVER_ID=<DISCORD_SERVER_ID>
+REDIS_URL=<REDIS_URL>
 ```
 
-Functions
+### Running the bot
+
+You can run this using either Docker (with or without docker-compose) or Ruby.
+
+**Docker with docker-compose**
+
 ```
-teletime function info:
-x +t teletime to see status of slots/branches
-x +t teletime a-z <name> to set active user on branch (72 hours)
-x +t teletime a-z <hours> to adjust time remaining for branch
-x +t teletime a-z free/done/finished to set branch status
-x +t teletime a-z clear_list to clear branch list
-x +t teletime a-z manual_list "user1,user2,user3" to manually set branch list
-+t teletime a-z default_time <hours> to set time per slot
+docker-compose up
 ```
+
