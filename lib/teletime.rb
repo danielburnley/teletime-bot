@@ -20,6 +20,7 @@ class Teletime
   end
 
   def add(branch, username)
+    branch.downcase!
     telephone = storage.get
     telephone[branch.to_sym][:names].append(username)
     telephone[branch.to_sym][:deadline] = (Time.now + (60 * 60 * 72)).to_i
@@ -28,6 +29,7 @@ class Teletime
   end
 
   def set_status(branch, status)
+    branch.downcase!
     telephone = storage.get
     telephone[branch.to_sym][:deadline] = 0
     telephone[branch.to_sym][:status] = status
@@ -35,6 +37,7 @@ class Teletime
   end
 
   def clear_list(branch)
+    branch.downcase!
     telephone = storage.get
     telephone[branch.to_sym][:names] = []
     telephone[branch.to_sym][:deadline] = 0
@@ -43,12 +46,14 @@ class Teletime
   end
 
   def manual_list(branch, names)
+    branch.downcase!
     telephone = storage.get
     telephone[branch.to_sym][:names] = names.split(",").map(&:strip)
     storage.store(telephone)
   end
 
   def set_hours(branch, hours)
+    branch.downcase!
     telephone = storage.get
     telephone[branch.to_sym][:deadline] = (Time.now + (60 * 60 * hours)).to_i
     storage.store(telephone)
