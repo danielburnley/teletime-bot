@@ -10,10 +10,6 @@ Dotenv.load(".env")
 bot_token = ENV["DISCORD_BOT_TOKEN"]
 server_id = ENV["DISCORD_SERVER_ID"]
 
-def teletime
-  Teletime.new(RedisTeletimeStore.new(ENV["DISCORD_SERVER_ID"]))
-end
-
 def with_teletime(server_id)
   redis_client = RedisTeletimeStore.new(server_id)
   teletime = Teletime.new(redis_client)
