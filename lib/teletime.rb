@@ -1,3 +1,6 @@
+require_relative "errors/branch_invalid_error"
+require "pry"
+
 class Teletime
   def initialize(storage)
     @storage = storage
@@ -20,7 +23,9 @@ class Teletime
   end
 
   def add(branch, username)
-    branch.downcase!
+    branch = format_branch(branch)
+    validate_branch(branch)
+
     telephone = storage.get
     telephone[branch.to_sym][:names].append(username)
     telephone[branch.to_sym][:deadline] = (Time.now + (60 * 60 * 72)).to_i
@@ -29,7 +34,9 @@ class Teletime
   end
 
   def set_status(branch, status)
-    branch.downcase!
+    branch = format_branch(branch)
+    validate_branch(branch)
+
     telephone = storage.get
     telephone[branch.to_sym][:deadline] = 0
     telephone[branch.to_sym][:status] = status
@@ -37,7 +44,9 @@ class Teletime
   end
 
   def clear_list(branch)
-    branch.downcase!
+    branch = format_branch(branch)
+    validate_branch(branch)
+
     telephone = storage.get
     telephone[branch.to_sym][:names] = []
     telephone[branch.to_sym][:deadline] = 0
@@ -46,14 +55,18 @@ class Teletime
   end
 
   def manual_list(branch, names)
-    branch.downcase!
+    branch = format_branch(branch)
+    validate_branch(branch)
+
     telephone = storage.get
     telephone[branch.to_sym][:names] = names.split(",").map(&:strip)
     storage.store(telephone)
   end
 
   def set_hours(branch, hours)
-    branch.downcase!
+    branch = format_branch(branch)
+    validate_branch(branch)
+
     telephone = storage.get
     telephone[branch.to_sym][:deadline] = (Time.now + (60 * 60 * hours)).to_i
     storage.store(telephone)
@@ -61,4 +74,14 @@ class Teletime
 
 private
   attr_reader :storage
+
+  def format_branch(branch)
+    branch.downcase.strip.to_sym
+  end
+
+  def validate_branch(branch)
+    branches = storage.get.keys
+    return if branches.include?(branch)
+    raise BranchInvalidError
+  end
 end
