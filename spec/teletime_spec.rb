@@ -1,5 +1,6 @@
 require "timecop"
 require_relative "../lib/teletime"
+require_relative "../lib/errors/branch_invalid_error"
 
 describe Teletime do
   before do
@@ -24,13 +25,47 @@ describe Teletime do
   let(:storage_stub) { spy(get: stored_teletime) }
   let(:subject) { described_class.new(storage_stub) }
 
+  shared_context "validation specs" do
+    context "valid branch" do
+      let(:branch) { "a" }
+
+      it "is valid" do
+        expect { teletime_command }.not_to raise_error
+      end
+    end
+
+    context "valid branch with spaces" do
+      let(:branch) { " a   " }
+
+      it "is valid" do
+        expect { teletime_command }.not_to raise_error
+      end
+    end
+
+    context "invalid branch" do
+      let(:branch) { "1" }
+
+      it "raises branch invalid error" do
+        expect { teletime_command }.to raise_error(BranchInvalidError)
+      end
+    end
+
+    context "invalid branch with spaces" do
+      let(:branch) { "  1  " }
+
+      it "raises branch invalid error" do
+        expect { teletime_command }.to raise_error(BranchInvalidError)
+      end
+    end
+  end
+
   describe "overview" do
     let(:response) { subject.overview }
 
     before { response }
 
     it "gets the current stored teletime" do
-      expect(storage_stub).to have_received(:get)
+      expect(storage_stub).to have_received(:get).at_least(:once)
     end
 
     it "returns the current stored teletime" do
@@ -55,9 +90,14 @@ describe Teletime do
   end
 
   describe "set_status" do
+    context "validation" do
+      include_context "validation specs"
+      let(:teletime_command) { subject.set_status(branch, "done") }
+    end
+
     it "gets the current telephone" do
       subject.set_status("a", "done")
-      expect(storage_stub).to have_received(:get)
+      expect(storage_stub).to have_received(:get).at_least(:once)
     end
 
     it "stores an updated teletime: a, done" do
@@ -78,10 +118,15 @@ describe Teletime do
   end
 
   describe "set_hours" do
+    context "validation" do
+      include_context "validation specs"
+      let(:teletime_command) { subject.set_hours(branch, 10) }
+    end
+
     let(:expected_time) {}
     it "gets the current telephone" do
-      subject.add("a", "squirrel")
-      expect(storage_stub).to have_received(:get)
+      subject.set_hours("a", 10)
+      expect(storage_stub).to have_received(:get).at_least(:once)
     end
 
     it "stores an updated teletime: a, squirrel" do
@@ -106,10 +151,15 @@ describe Teletime do
   end
 
   describe "add" do
+    context "validation" do
+      include_context "validation specs"
+      let(:teletime_command) { subject.add(branch, "cat") }
+    end
+
     let(:expected_time) { (Time.now + (72 * 60 * 60)).to_i }
     it "gets the current telephone" do
       subject.add("a", "squirrel")
-      expect(storage_stub).to have_received(:get)
+      expect(storage_stub).to have_received(:get).at_least(:once)
     end
 
     it "stores an updated teletime: a, squirrel" do
@@ -130,9 +180,14 @@ describe Teletime do
   end
 
   describe "clear_list" do
+    context "validation" do
+      include_context "validation specs"
+      let(:teletime_command) { subject.clear_list(branch) }
+    end
+
     it "gets the current telephone" do
       subject.clear_list("a")
-      expect(storage_stub).to have_received(:get)
+      expect(storage_stub).to have_received(:get).at_least(:once)
     end
 
     it "stores the cleared name list: a" do
@@ -153,9 +208,14 @@ describe Teletime do
   end
 
   describe "manual_list" do
+    context "validation" do
+      include_context "validation specs"
+      let(:teletime_command) { subject.manual_list(branch, "test,test") }
+    end
+
     it "gets the current telephone" do
       subject.manual_list("a", "")
-      expect(storage_stub).to have_received(:get)
+      expect(storage_stub).to have_received(:get).at_least(:once)
     end
 
     it "stores the manual list: a" do
