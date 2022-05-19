@@ -6,6 +6,10 @@ Dotenv.load(".env")
 bot_token = ENV["DISCORD_BOT_TOKEN"]
 server_id = ENV["DISCORD_SERVER_ID"]
 
+unless server_id
+  raise StandardError.new("Please define a server ID")
+end
+
 bot = Discordrb::Bot.new(token: bot_token, intents: [:server_messages])
 
 bot.register_application_command(:teletime, "Teletime", server_id: server_id) do |cmd|
