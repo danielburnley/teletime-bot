@@ -14,6 +14,7 @@ server_id = ENV["DISCORD_SERVER_ID"]
 
 def with_teletime(event)
   redis_client = RedisTeletimeStore.new(event.server.id)
+  binding.pry
   teletime = Teletime.new(redis_client)
 
   current_teletime = teletime.overview
@@ -112,6 +113,13 @@ bot.application_command(:teletime).subcommand(:free) do |event|
     teletime.set_status(branch, "free")
     overview = teletime.overview
     event.respond(content: teletime_display.format_branch_status_update(branch, "free", overview))
+  end
+end
+
+bot.message(starts_with: "+teletime") do |event|
+  with_teletime(event) do |teletime|
+    overview = teletime.overview
+    event.respond(teletime_display.format_teletime(overview))
   end
 end
 
