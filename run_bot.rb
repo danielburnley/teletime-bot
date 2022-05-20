@@ -125,7 +125,7 @@ Thread.new do
   end
 end
 
-set :port, $ENV["PORT"]
+set :port, ENV["PORT"]
 get "/" do
   "ok"
 end
