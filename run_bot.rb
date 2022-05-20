@@ -14,6 +14,12 @@ server_id = ENV["DISCORD_SERVER_ID"]
 def with_teletime(event)
   redis_client = RedisTeletimeStore.new(event.server.id)
   teletime = Teletime.new(redis_client)
+
+  current_teletime = teletime.overview
+  if(current_teletime.keys.length == 0)
+    teletime.reset
+  end
+
   yield(teletime)
 rescue BranchInvalidError => e
   event.respond(content: e.message, ephemeral: true)
