@@ -1,4 +1,5 @@
 require "discordrb"
+require "sinatra"
 require "dotenv"
 require "pry"
 require_relative "lib/teletime"
@@ -114,4 +115,16 @@ bot.application_command(:teletime).subcommand(:free) do |event|
   end
 end
 
-bot.run
+Thread.new do
+  begin
+    bot.run
+  rescue Exception => e
+    STDERR.puts "ERROR: #{e}"
+    STDERR.puts e.backtrace
+    raise e
+  end
+end
+
+get "/" do
+  "ok"
+end

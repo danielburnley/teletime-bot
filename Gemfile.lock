@@ -29,12 +29,20 @@ GEM
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
+    nio4r (2.5.8)
     opus-ruby (1.0.1)
       ffi
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    puma (5.6.4)
+      nio4r (~> 2.0)
+    rack (2.2.3)
+    rack-protection (2.2.0)
+      rack
     redis (4.6.0)
     rest-client (2.1.0)
       http-accept (>= 1.7.0, < 2.0)
@@ -54,6 +62,13 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
+    ruby2_keywords (0.0.5)
+    sinatra (2.2.0)
+      mustermann (~> 1.0)
+      rack (~> 2.2)
+      rack-protection (= 2.2.0)
+      tilt (~> 2.0)
+    tilt (2.0.10)
     timecop (0.9.5)
     unf (0.1.4)
       unf_ext
@@ -70,8 +85,10 @@ DEPENDENCIES
   discordrb!
   dotenv
   pry
+  puma
   redis
   rspec
+  sinatra
   timecop
 
 BUNDLED WITH
