@@ -1,1 +1,1 @@
-web: bundle exec ruby run_bot.rb
+worker: bundle exec ruby run_bot.rb
