@@ -5,6 +5,7 @@ require "pry"
 require_relative "lib/teletime"
 require_relative "lib/redis_teletime_store"
 require_relative "lib/teletime_display"
+require_relative "lib/command_parser"
 require_relative "lib/errors/branch_invalid_error"
 
 Dotenv.load(".env")
@@ -28,7 +29,24 @@ ensure
   redis_client.close
 end
 
+def with_teletime_text(event)
+  redis_client = RedisTeletimeStore.new(event.server.id)
+  teletime = Teletime.new(redis_client)
+
+  current_teletime = teletime.overview
+  if(current_teletime.keys.length == 0)
+    teletime.reset
+  end
+
+  yield(teletime)
+rescue BranchInvalidError => e
+  event.respond(e.message)
+ensure
+  redis_client.close
+end
+
 teletime_display = TeletimeDisplay.new
+command_parser = CommandParser.new
 
 bot = Discordrb::Bot.new(token: bot_token, intents: [:server_messages])
 
@@ -112,6 +130,22 @@ bot.application_command(:teletime).subcommand(:free) do |event|
     teletime.set_status(branch, "free")
     overview = teletime.overview
     event.respond(content: teletime_display.format_branch_status_update(branch, "free", overview))
+  end
+end
+
+bot.message(starts_with: "+teletime ") do |event|
+  command = command_parser.parse(event.text)
+  with_teletime_text(event) do |teletime|
+    if command[0] == :overview
+      overview = teletime.overview
+      event.respond(teletime_display.format_teletime(overview))
+    elsif command[0] == :add
+      branch = command[1]
+      username = command[2]
+      teletime.add(branch, username)
+      overview = teletime.overview
+      event.respond(teletime_display.format_branch_updated(branch, username, overview))
+    end
   end
 end
 
