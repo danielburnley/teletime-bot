@@ -1,5 +1,5 @@
 class CommandParser
-  def initialize(base="+teletime")
+  def initialize(base=",teletime")
     @base = base
   end
 

@@ -133,7 +133,7 @@ bot.application_command(:teletime).subcommand(:free) do |event|
   end
 end
 
-bot.message(starts_with: "+teletime ") do |event|
+bot.message(starting_with: ",teletime") do |event|
   command = command_parser.parse(event.text)
   with_teletime_text(event) do |teletime|
     if command[0] == :overview
