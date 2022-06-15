@@ -134,7 +134,9 @@ bot.application_command(:teletime).subcommand(:free) do |event|
 end
 
 bot.message(starting_with: ",teletime") do |event|
+  puts "Responding to message: #{event.text}"
   command = command_parser.parse(event.text)
+  puts "Command is: #{command}"
   with_teletime_text(event) do |teletime|
     if command[0] == :overview
       overview = teletime.overview
@@ -147,6 +149,7 @@ bot.message(starting_with: ",teletime") do |event|
       event.respond(teletime_display.format_branch_updated(branch, username, overview))
     end
   end
+  puts "Finished responding"
 end
 
 Thread.new do
