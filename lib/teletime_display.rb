@@ -30,7 +30,7 @@ class TeletimeDisplay
   end
 
   def format_branch_hours_updated(branch, teletime)
-    update = "Branch #{branch.upcase} now due #{timestamp_to_discord(teletime[branch.downcase.to_sym][:deadline])}."
+    update = "Branch #{branch.upcase} now due #{timestamp_to_discord_full(teletime[branch.downcase.to_sym][:deadline])}."
 
     "#{update}\n\n#{format_teletime(teletime)}"
   end
@@ -58,7 +58,7 @@ private
   def format_branch_current_slot(branch, status)
     if(status[:status] == "in progress")
       names = status[:names]
-      return "**#{branch.to_s.upcase}(#{names.last}):** #{timestamp_to_discord(status[:deadline])}"
+      return "**#{branch.to_s.upcase}(#{names.last}):** #{timestamp_to_discord_relative(status[:deadline])} - #{timestamp_to_discord_full(status[:deadline])}"
     else
       return "**#{branch.to_s.upcase}(#{status[:status]}):** n/a"
     end
@@ -68,7 +68,11 @@ private
     "#{branch.to_s.upcase}: #{status[:names].join(", ")} (#{status[:names].count})"
   end
 
-  def timestamp_to_discord(timestamp)
+  def timestamp_to_discord_relative(timestamp)
     "<t:#{timestamp}:R>"
+  end
+
+  def timestamp_to_discord_full(timestamp)
+    "<t:#{timestamp}:F>"
   end
 end
