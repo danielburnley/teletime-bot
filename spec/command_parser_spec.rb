@@ -1,7 +1,7 @@
 require_relative "../lib/command_parser"
 
 describe CommandParser do
-  let(:subject) { described_class.new }
+  let(:subject) { described_class.new("+teletime") }
 
   context "Empty command" do
     it "returns overview" do
