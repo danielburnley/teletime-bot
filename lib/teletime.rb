@@ -72,6 +72,16 @@ class Teletime
     storage.store(telephone)
   end
 
+  def amend(branch, new_name)
+  branch = format_branch(branch)
+  validate_branch(branch)
+  
+  telephone = storage.get
+  telephone[branch.to_sym][:names].pop
+  telephone[branch.to_sym][:names] << new_name
+  storage.store(telephone)
+  end
+
 private
   attr_reader :storage
 
