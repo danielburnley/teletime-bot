@@ -14,6 +14,7 @@ bot = Discordrb::Bot.new(token: bot_token, intents: [:server_messages])
 
 bot.register_application_command(:teletime, "Teletime", server_id: server_id) do |cmd|
   cmd.subcommand(:show, "Shows the current telephone")
+  cmd.subcommand(:show_test, "Shows the current telephone")
 
   cmd.subcommand(:reset, "Resets current telephone") do |sub|
     sub.boolean("confirmation", "Please confirm you want to do this", required: true)

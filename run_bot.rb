@@ -45,6 +45,13 @@ ensure
   redis_client.close
 end
 
+def respond(event, content)
+  event.respond(
+    content: content,
+    allowed_mentions: Discordrb::AllowedMentions.new(parse: [])
+  )
+end
+
 teletime_display = TeletimeDisplay.new
 command_parser = CommandParser.new
 
@@ -64,6 +71,13 @@ bot.application_command(:teletime).subcommand(:show) do |event|
   with_teletime(event) do |teletime|
     overview = teletime.overview
     event.respond(content: teletime_display.format_teletime(overview))
+  end
+end
+
+bot.application_command(:teletime).subcommand(:show_test) do |event|
+  with_teletime(event) do |teletime|
+    overview = teletime.overview
+    respond(event, teletime_display.format_teletime(overview))
   end
 end
 
