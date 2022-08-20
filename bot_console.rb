@@ -10,7 +10,7 @@ Dotenv.load(".env")
 bot_token = ENV["DISCORD_BOT_TOKEN"]
 server_id = ENV["DISCORD_SERVER_ID"]
 
-teletime = Teletime.new(RedisTeletimeStore.new)
+teletime = Teletime.new(RedisTeletimeStore.new(server_id))
 teletime_display = TeletimeDisplay.new
 
 bot = Discordrb::Bot.new(token: bot_token, intents: [:server_messages])
