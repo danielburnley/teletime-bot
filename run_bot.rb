@@ -77,6 +77,16 @@ bot.application_command(:teletime).subcommand(:add) do |event|
   end
 end
 
+bot.application_command(:teletime).subcommand(:edit) do |event|
+  branch = event.options["branch"]
+  username = event.options["username"]
+  with_teletime(event) do |teletime|
+    teletime.amend(branch, username)
+    overview = teletime.overview
+    event.respond(content: teletime_display.format_branch_updated(branch, username, overview))
+  end
+end
+
 bot.application_command(:teletime).subcommand(:set_hours) do |event|
   branch = event.options["branch"]
   hours = event.options["hours"]

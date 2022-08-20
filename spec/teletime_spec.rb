@@ -234,4 +234,32 @@ describe Teletime do
       })
     end
   end
+
+  describe "amend" do
+    context "validation" do
+      include_context "validation specs"
+      let(:teletime_command) { subject.amend(branch, "cat") }
+    end
+
+    it "gets the current telephone" do
+      subject.amend("a", "quack")
+      expect(storage_stub).to have_received(:get).at_least(:once)
+    end
+
+    it "stores the amended telephone: a, quack" do
+      subject.amend("a", "quack")
+      expect(storage_stub).to have_received(:store).with({
+        a: { names: ["cat", "quack"], deadline: 123, status: "in progress" },
+        b: { names: ["duck", "cow"], deadline: 123, status: "in progress" }
+      })
+    end
+
+    it "stores the amended telephone: b, quack" do
+      subject.amend("b", "quack")
+      expect(storage_stub).to have_received(:store).with({
+        a: { names: ["cat", "dog"], deadline: 123, status: "in progress" },
+        b: { names: ["duck", "quack"], deadline: 123, status: "in progress" }
+      })
+    end
+  end
 end
