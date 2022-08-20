@@ -49,6 +49,11 @@ bot.register_application_command(:teletime, "Teletime", server_id: server_id) do
   cmd.subcommand(:free, "Marks the branch as free") do |sub|
     sub.string("branch", "The branch to mark as free", required: true)
   end
+
+  cmd.subcommand(:edit, "Edits the name of the last person in the branch") do |sub|
+    sub.string("branch", "The branch to edit", required: true)
+    sub.string("username", "The updated username", required: true)
+  end
 end
 
 
