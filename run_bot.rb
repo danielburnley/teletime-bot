@@ -62,7 +62,7 @@ bot.application_command(:teletime).subcommand(:reset) do |event|
     with_teletime(event) do |teletime|
       teletime.reset
       overview = teletime.overview
-      event.respond(content: teletime_display.format_teletime_reset(overview))
+      respond(event, teletime_display.format_teletime_reset(overview))
     end
   end
 end
@@ -87,7 +87,7 @@ bot.application_command(:teletime).subcommand(:add) do |event|
   with_teletime(event) do |teletime|
     teletime.add(branch, username)
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_updated(branch, username, overview))
+    respond(event, teletime_display.format_branch_updated(branch, username, overview))
   end
 end
 
@@ -97,7 +97,7 @@ bot.application_command(:teletime).subcommand(:edit) do |event|
   with_teletime(event) do |teletime|
     teletime.amend(branch, username)
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_updated(branch, username, overview))
+    respond(event, teletime_display.format_branch_updated(branch, username, overview))
   end
 end
 
@@ -107,7 +107,7 @@ bot.application_command(:teletime).subcommand(:set_hours) do |event|
   with_teletime(event) do |teletime|
     teletime.set_hours(branch, hours)
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_hours_updated(branch, overview))
+    respond(event, teletime_display.format_branch_hours_updated(branch, overview))
   end
 end
 
@@ -116,7 +116,7 @@ bot.application_command(:teletime).subcommand(:clear_list) do |event|
   with_teletime(event) do |teletime|
     teletime.clear_list(branch)
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_cleared(branch, overview))
+    respond(event, teletime_display.format_branch_cleared(branch, overview))
   end
 end
 
@@ -126,7 +126,7 @@ bot.application_command(:teletime).subcommand(:manual_list) do |event|
   with_teletime(event) do |teletime|
     teletime.manual_list(branch, usernames)
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_manually_set(branch, overview))
+    respond(event, teletime_display.format_branch_manually_set(branch, overview))
   end
 end
 
@@ -135,7 +135,7 @@ bot.application_command(:teletime).subcommand(:done) do |event|
   with_teletime(event) do |teletime|
     teletime.set_status(branch, "done")
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_status_update(branch, "done", overview))
+    respond(event, teletime_display.format_branch_status_update(branch, "done", overview))
   end
 end
 
@@ -144,7 +144,7 @@ bot.application_command(:teletime).subcommand(:on_hold) do |event|
   with_teletime(event) do |teletime|
     teletime.set_status(branch, "on hold")
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_status_update(branch, "on hold", overview))
+    respond(event, teletime_display.format_branch_status_update(branch, "on hold", overview))
   end
 end
 
@@ -153,7 +153,7 @@ bot.application_command(:teletime).subcommand(:free) do |event|
   with_teletime(event) do |teletime|
     teletime.set_status(branch, "free")
     overview = teletime.overview
-    event.respond(content: teletime_display.format_branch_status_update(branch, "free", overview))
+    respond(event, teletime_display.format_branch_status_update(branch, "free", overview))
   end
 end
 
@@ -164,13 +164,13 @@ bot.message(starting_with: ",teletime") do |event|
   with_teletime_text(event) do |teletime|
     if command[0] == :overview
       overview = teletime.overview
-      event.respond(teletime_display.format_teletime(overview))
+      respond(event, display.format_teletime(overview))
     elsif command[0] == :add
       branch = command[1]
       username = command[2]
       teletime.add(branch, username)
       overview = teletime.overview
-      event.respond(teletime_display.format_branch_updated(branch, username, overview))
+      respond(event, display.format_branch_updated(branch, username, overview))
     end
   end
   puts "Finished responding"
