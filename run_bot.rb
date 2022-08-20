@@ -24,7 +24,7 @@ def with_teletime(event)
 
   yield(teletime)
 rescue BranchInvalidError => e
-  event.respond(content: e.message, ephemeral: true)
+  event.respond(content: e.message, ephemeral: true, allowed_mentions: Discordrb::AllowedMentions.new(parse: []))
 ensure
   redis_client.close
 end
@@ -40,7 +40,7 @@ def with_teletime_text(event)
 
   yield(teletime)
 rescue BranchInvalidError => e
-  event.respond(e.message)
+  respond(event, e.message)
 ensure
   redis_client.close
 end
@@ -70,7 +70,7 @@ end
 bot.application_command(:teletime).subcommand(:show) do |event|
   with_teletime(event) do |teletime|
     overview = teletime.overview
-    event.respond(content: teletime_display.format_teletime(overview))
+    respond(event, teletime_display.format_teletime(overview))
   end
 end
 
